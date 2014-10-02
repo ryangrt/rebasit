@@ -39,7 +39,7 @@ if "git-rebase-todo" in arg:
     f.close()
 else:
     #invoke git rebase with me as editor
-    os.environ['GIT_EDITOR'] = PYBASE + "/rebasit.py"
+    os.environ['GIT_EDITOR'] = PYBASE + "/rebasit"
     cmd = "git rebase -i " + arg
     print cmd
     os.system(cmd)
