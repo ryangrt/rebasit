@@ -26,12 +26,14 @@ update("foo == 'bar' or bus > 4", fields=('foo', 'bar', 'bus'))
 """
 import sys, os
 PYBASE = os.path.abspath(os.path.dirname(__file__)) 
-try:
+
+arg = ""
+if len(sys.argv) > 1:
     arg = sys.argv[1]
-except:
-    print "rebasit <commit>"
-    print "#rebases squashing repeat comments"
-    exit()
+    if arg == "--help":
+        print "rebasit <commit>"
+        print "#rebases squashing repeat comments"
+        exit()
 
 if "git-rebase-todo" in arg:
     #act as editor
@@ -61,6 +63,28 @@ if "git-rebase-todo" in arg:
     f.close()
 else:
     #invoke git rebase with me as editor
+    if arg == "":
+        cmd = "git log > __rebasit_temp__"
+        print cmd
+        os.system(cmd)
+        f = open("__rebasit_temp__")
+        lines = f.readlines()
+        f.close()
+        oldmsg = ""
+        for r in lines:
+            if r[:7] == "commit ":
+                commit = r.strip().split()[1]
+            if r[:4] == "    ":
+                msg = r.strip()
+                if oldmsg != "" and msg != oldmsg:
+                    arg = commit
+                    break
+                oldmsg = msg
+        print "calculated rebase commit:", commit
+        arg = commit
+        cmd = "rm __rebasit_temp__"
+        print cmd
+        os.system(cmd)
     os.environ['GIT_EDITOR'] = PYBASE + "/rebasit"
     cmd = "git rebase -i " + arg
     print cmd
