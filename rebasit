@@ -47,6 +47,9 @@ if "git-rebase-todo" in arg:
             i = r.find(' ')
             commit = r[:i]
             message = r[i+1:]
+            j = message.find('|')
+            if j > -1:
+                message = message[:j]
             if message == oldmsg:
     #             print commit, "SQUASH"
                 o.append("f %s %s" % (commit, message))
@@ -76,6 +79,9 @@ else:
                 commit = r.strip().split()[1]
             if r[:4] == "    ":
                 msg = r.strip()
+                j = msg.find('|')
+                if j > -1:
+                    msg = msg[:j]
                 if oldmsg != "" and msg != oldmsg:
                     arg = commit
                     break
