@@ -31,8 +31,8 @@ def parse_concol(s):
         ret['collection'] = temp[1] 
     elif len(temp) == 1:
         ret['port'] = 27017
-        ret['database'] = temp[0]
-        ret['collection'] = temp[1] 
+        ret['database'] = config.database
+        ret['collection'] = temp[0] 
     else:
         raise Exception("parse_concol format: [user:passwd@][hostipaddr][:port]]/database/collection")
     return ret
@@ -49,4 +49,6 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         exec(sys.argv[1])
     else:
+        def goosrc_do():
+            pass
         mongoo ("local_db/goosrc", goosrc_do)
