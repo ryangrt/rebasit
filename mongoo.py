@@ -41,7 +41,9 @@ def parse_concol(s):
 # mongoo(concol1, [concol2, ...] cb, [qarg1=val1, ...])
 # call with source connection/collection, dest concol, callback, args for mongoengine query
 #
-def mongoo(*args, **kw):
+def mongoo(src, *args, **kw):
+    src = parse_concol(src)
+    print "source:", src
     print "mongoo args:", args
     print "mongoo kw:", kw
 
@@ -51,4 +53,4 @@ if __name__ == "__main__":
     else:
         def goosrc_do():
             pass
-        mongoo ("local_db/goosrc", goosrc_do)
+        mongoo ("goosrc", goosrc_do, flaggy=1)
