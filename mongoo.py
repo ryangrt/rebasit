@@ -24,7 +24,7 @@ def parse_concol(s):
         ret['host'] = "localhost"
     temp = s.split('/')
     if len(temp) == 3:
-        ret['port'] = temp[0]
+        ret['port'] = int(temp[0])
         ret['database'] = temp[1]
         ret['collection'] = temp[2] 
     elif len(temp) == 2:
@@ -41,6 +41,7 @@ def parse_concol(s):
 
 def open_concol(cc):
     cc = parse_concol(cc)
+#     print "DEBUG cc:", cc
     meng.connect(cc['database'], host=cc['host'], port=cc['port'], username=cc['user'], password=cc['password'])
     return globals()[ cc['collection'] ]
 #
@@ -56,6 +57,7 @@ def mongoo(src, *args, **kw):
     cb(src, *args[:-1], **kw)
 
 if __name__ == "__main__":
+    import config
     if len(sys.argv) > 1:
         exec(sys.argv[1])
         exit()
@@ -64,5 +66,8 @@ if __name__ == "__main__":
     def goosrc_cb(src, *args, **kw):
         print "goosrc_cb:", src, args, kw, src.objects.count()
 
+    print "DEBUG A"
+    mongoo ("tester:%s@127.0.0.1:8501/dev_testdb/parsed" % config.password, goosrc_cb, flaggy=2)
+    print "DEBUG B"
     mongoo ("parsed", goosrc_cb, flaggy=1)
-    mongoo ("127.0.0.1:27017/sci_testdb/parsed", goosrc_cb, flaggy=2)
+    print "DEBUG C"
