@@ -78,7 +78,7 @@ if __name__ == "__main__":
 #     print parsed.objects.count(), db
     db2=meng.connect("dev_testdb", alias="dbtoo", host="127.0.0.1", port=8501, username="tester", password=config.password)
 #     print parsed.objects.count(), db2
-    switch_db(parsed, "default").__enter__()
+#     switch_db(parsed, "default").__enter__()
     print parsed.objects.count()
     switch_db(parsed, "dbtoo").__enter__()
     print parsed.objects.count()
