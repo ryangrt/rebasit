@@ -3,7 +3,6 @@
 #
 import sys
 from datetime import datetime
-import config
 
 #
 # user:passwd@hostipaddr:port/database/collection
@@ -12,10 +11,7 @@ def parse_concol(s):
     ret = {}
     if '@' in s:
         up, s = s.split('@')
-        if ':' in up:
-            ret['user'], ret['password']  = up.split(':')
-        else:
-            ret['user'], ret['password'] = up, config.password
+        ret['user'], ret['password']  = up.split(':')
     if ':' in s:
         ret['host'], s = s.split(':')
     else:
@@ -31,7 +27,7 @@ def parse_concol(s):
         ret['collection'] = temp[1] 
     elif len(temp) == 1:
         ret['port'] = 27017
-        ret['database'] = config.database
+        ret['database'] = "local_db"
         ret['collection'] = temp[0] 
     else:
         raise Exception("parse_concol format: [user:passwd@][hostipaddr][:port]]/database/collection")
@@ -43,14 +39,17 @@ def parse_concol(s):
 #
 def mongoo(src, *args, **kw):
     src = parse_concol(src)
-    print "source:", src
-    print "mongoo args:", args
-    print "mongoo kw:", kw
+#     print "source:", src
+    cb = args[-1]
+#     print "mongoo args:", args[:-1]
+#     print "mongoo kw:", kw
+    cb(src, *args[:-1], **kw)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         exec(sys.argv[1])
-    else:
-        def goosrc_do():
-            pass
-        mongoo ("goosrc", goosrc_do, flaggy=1)
+        exit()
+    def goosrc_cb(src, *args, **kw):
+        print "goosrc_cb:", src, args, kw
+
+    mongoo ("goosrc", goosrc_cb, flaggy=1)
