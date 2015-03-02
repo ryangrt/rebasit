@@ -63,11 +63,23 @@ if __name__ == "__main__":
         exit()
     class parsed(meng.Document):
         pass
+    class li_profiles(meng.Document):
+        pass
     def goosrc_cb(src, *args, **kw):
         print "goosrc_cb:", src, args, kw, src.objects.count()
 
-    print "DEBUG A"
-    mongoo ("tester:%s@127.0.0.1:8501/dev_testdb/parsed" % config.password, goosrc_cb, flaggy=2)
-    print "DEBUG B"
-    mongoo ("parsed", goosrc_cb, flaggy=1)
-    print "DEBUG C"
+#     print "DEBUG A"
+#     mongoo ("tester:%s@127.0.0.1:8501/dev_testdb/parsed" % config.password, goosrc_cb, flaggy=2)
+#     print "DEBUG B"
+#     mongoo ("parsed", goosrc_cb, flaggy=1)
+#     print "DEBUG C"
+
+    db=meng.connect("local_db", alias="default", host="127.0.0.1", port=27017)
+#     print parsed.objects.count(), db
+    db2=meng.connect("dev_testdb", alias="dbtoo", host="127.0.0.1", port=8501, username="tester", password=config.password)
+#     print parsed.objects.count(), db2
+    with switch_db(parsed, "default") as p1:
+#         print p1.objects.count()
+        with switch_db(li_profiles, "dbtoo") as p2:
+            print p1.objects.count()
+            print p2.objects.count()
